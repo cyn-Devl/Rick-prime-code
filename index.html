@@ -137,7 +137,7 @@
     const FIVE_MIN = 5 * 60 * 1000;
     const THREE_HALF_HR = 3.5 * 60 * 60 * 1000;
 
-    const THIRD_PHRASE = "duckydannykalveryulz0798xazeyojjsmonkeynephewazral_bib.oogaboogaman_datamancerquiddzykfcchlcken12justachillguyfromytakuhplejv20121016halzztootuff";
+    const THIRD_PHRASE = "duckydannykalveryulz0798xazeyojjsmonkeynephewazral_bib.oogaboogaman_datamancerquiddzykfcchlcken12justachillguyfromytakuhplejv20121016halzztootuffno";
 
     let slideInterval;
 
@@ -233,11 +233,10 @@
           showCopyBoxLate();
         }
       } else if (raw === THIRD_PHRASE) {
-        // must be exact, no caps/spaces — raw already has no spaces if typed correctly
         if (elapsed >= FIVE_MIN) {
           showCopyBoxThird();
         } else {
-          showEntry(); // too early, nothing happens
+          showEntry();
         }
       } else if (lower === "daddy") {
         showSlideshow([image4]);
@@ -248,7 +247,6 @@
       }
     }
 
-    // bottom-left running timer showing time since page loaded
     function updateTimer() {
       const elapsed = Date.now() - PAGE_START;
       const totalSec = Math.floor(elapsed / 1000);
