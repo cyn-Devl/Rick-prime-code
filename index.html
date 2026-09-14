@@ -49,6 +49,30 @@
     object-fit: contain;
     display: block;
   }
+  #copyBox {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  #copyText {
+    color: #fff;
+    background: #222;
+    border: 1px solid #555;
+    border-radius: 8px;
+    padding: 14px 18px;
+    max-width: 80vw;
+    word-break: break-all;
+    cursor: pointer;
+    user-select: none;
+    font-family: monospace;
+    font-size: 13px;
+  }
+  #copyMsg {
+    color: #4ade80;
+    font-size: 14px;
+    height: 18px;
+  }
 </style>
 </head>
 <body>
@@ -63,6 +87,11 @@
     <img id="slideshow" src="" alt="result">
   </div>
 
+  <div id="copyBox">
+    <div id="copyText">KLUv/WCZL50eABYylifwzroBDlVAEG/QLRrdyWHr5wrLsFlCTLsCxolMdA1BU6QjsolsQkOPAIsAigB/dWca/4NQovibEi/x4ve8j0byHK1tB4//IrHIT/H/00wPKJJMjwmSIkk0wUb0okgSQSAUcUAeEAmapAZkQPEPtMR0zfg9BhQ/B4Kb/B6mOHq8+HHAciw2DFvRZWynwBRn0ndS6vwkijNt4cdzSot2YOHHHIUuYTkPXCdiGxK4DlPcl4jx41R0KCi+rsgegwYUvwSn8j/Nh99lHFDobDoEBweucqsnk+Z/M26axECSBELHQ5og0wRFKP6umxO0878Hf0ehRN/Ivsi+SIHUekq3WoDWLNvaEge2K8Uokv9FFH93rfrifw6Kf7HNNf63WLGyWBSzbI09LYiOm+gcIjA6y/harOge+R9nwmGzQPH3rKLForPifxGEKA4dzkWX8WeUTv4HYVKKIkcEJ0kEowZ80De6fcXJFSf8j87GwH3QqnQyJ70osW5v1fkf1Jiqex6EDSgdAqD4XVbWtTgrFhZrtRdaJ9sY6XF2hdFp1eb0SrOe7XBfxLEPYlS61CgFV+H3UPwMCRCbTvXgOI5hYikqEPZ9IMXYAL0mpRY//kR0nYz/aQIaAlq5rEAo7YNAiV/b1mXFZYVrSo2+0Pt8NFIDUnQ2GUXXVQWug9g8VFRqzDZz0Yr/XVJbx1pOqzamtrYYXWyrUGeTcQ1G6zNKq6u8loJJLfYDYH1GxzZ6iZ5ttbZjcjG6sy0sWvskKap0Umt9xvUZ90EA0XaB1NZnzLi0Ykb5n5yTWotFK4CQqJEVQozQCJFIQZKCpDEgAkIIUqpu6RKIA1VHQiIyClE0EQVSkpJCYWc/Ax4OUnELE645D0ftpBHDjDDnEOEVgpTmRVYLA4waYzeBHqrwEJHbQjjbgMSqZvLOdeewGH6sZa6uQGwBdN3u4vU/jtB1elalOhL3Qc5fXXpFREUzIrgI6FI/AKOnhy85nz+9CrpQOQNoBABTFbAwhlxDVlwkOHYD5EKR9gcAVp9fVIdZH/qHCSTjNsIp3lfCgZpl5crCtWQvB+3IDz+rFtPO2PLuRnhKtRBaV07Hpgk778lmYAIDX2OHKGIqWJcR/AAXQPiMA8f2OzAiktOFzijNP33GDQO3JnWiBv06EaiMMiw/Mzk8rPTYg6mCF0hEIFxxnqVZaCBlh29bBvjdxvcGVqhK6+gsOmkPPRUhjAKkR73fbwrtlDYR2OJwki46dZ4MIdHhB9gQiNo8EKsF6QPfOuchSTgPoWGIGGMt4QzNc3EsVS8M/vilqAE=</div>
+    <div id="copyMsg"></div>
+  </div>
+
   <script>
     const image1 = "https://cdn.phototourl.com/free/2026-09-13-0ac345ed-85ce-4cb1-903e-499357e87dc2.webp";
     const image2 = "https://cdn.phototourl.com/free/2026-09-14-baa52b79-5c0a-4bcd-90c0-b47dd0c62da2.jpg";
@@ -71,8 +100,15 @@
 
     let interval;
 
-    function showSlideshow(images) {
+    function hideAll() {
       document.getElementById("entry").style.display = "none";
+      document.getElementById("display").style.display = "none";
+      document.getElementById("copyBox").style.display = "none";
+      if (interval) clearInterval(interval);
+    }
+
+    function showSlideshow(images) {
+      hideAll();
       document.getElementById("display").style.display = "block";
       const img = document.getElementById("slideshow");
       let i = 0;
@@ -85,18 +121,34 @@
       }
     }
 
+    function showCopyBox() {
+      hideAll();
+      document.getElementById("copyBox").style.display = "flex";
+    }
+
     document.getElementById("go").addEventListener("click", handleSubmit);
     document.getElementById("codeInput").addEventListener("keydown", (e) => {
       if (e.key === "Enter") handleSubmit();
     });
 
+    document.getElementById("copyText").addEventListener("click", () => {
+      const text = document.getElementById("copyText").innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        document.getElementById("copyMsg").textContent = "Copied!";
+        setTimeout(() => { document.getElementById("copyMsg").textContent = ""; }, 1500);
+      });
+    });
+
     function handleSubmit() {
-      const val = document.getElementById("codeInput").value.trim().toLowerCase();
+      const val = document.getElementById("codeInput").value.trim();
+      const lower = val.toLowerCase();
       if (!val) return;
 
-      if (val === "daddy") {
+      if (val === "Rick-Primeee-Ducky-is-dad") {
+        showCopyBox();
+      } else if (lower === "daddy") {
         showSlideshow([image4]);
-      } else if (val.includes("prime") || val.includes("rick")) {
+      } else if (lower.includes("prime") || lower.includes("rick")) {
         showSlideshow([image1]);
       } else {
         showSlideshow([image2, image3]);
