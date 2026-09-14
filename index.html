@@ -49,13 +49,15 @@
     object-fit: contain;
     display: block;
   }
-  #copyBox {
+  #copyBoxEarly, #copyBoxLate, #waitBox {
     display: none;
     flex-direction: column;
     align-items: center;
     gap: 10px;
+    text-align: center;
+    padding: 20px;
   }
-  #copyText {
+  .copyText {
     color: #fff;
     background: #222;
     border: 1px solid #555;
@@ -68,10 +70,23 @@
     font-family: monospace;
     font-size: 13px;
   }
-  #copyMsg {
+  .copyMsg {
     color: #4ade80;
     font-size: 14px;
     height: 18px;
+  }
+  #waitBox p {
+    color: #fff;
+    font-size: 22px;
+    max-width: 80vw;
+  }
+  #timer {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    color: #888;
+    font-family: monospace;
+    font-size: 13px;
   }
 </style>
 </head>
@@ -87,10 +102,23 @@
     <img id="slideshow" src="" alt="result">
   </div>
 
-  <div id="copyBox">
-    <div id="copyText">KLUv/WCZL50eABYylifwzroBDlVAEG/QLRrdyWHr5wrLsFlCTLsCxolMdA1BU6QjsolsQkOPAIsAigB/dWca/4NQovibEi/x4ve8j0byHK1tB4//IrHIT/H/00wPKJJMjwmSIkk0wUb0okgSQSAUcUAeEAmapAZkQPEPtMR0zfg9BhQ/B4Kb/B6mOHq8+HHAciw2DFvRZWynwBRn0ndS6vwkijNt4cdzSot2YOHHHIUuYTkPXCdiGxK4DlPcl4jx41R0KCi+rsgegwYUvwSn8j/Nh99lHFDobDoEBweucqsnk+Z/M26axECSBELHQ5og0wRFKP6umxO0878Hf0ehRN/Ivsi+SIHUekq3WoDWLNvaEge2K8Uokv9FFH93rfrifw6Kf7HNNf63WLGyWBSzbI09LYiOm+gcIjA6y/harOge+R9nwmGzQPH3rKLForPifxGEKA4dzkWX8WeUTv4HYVKKIkcEJ0kEowZ80De6fcXJFSf8j87GwH3QqnQyJ70osW5v1fkf1Jiqex6EDSgdAqD4XVbWtTgrFhZrtRdaJ9sY6XF2hdFp1eb0SrOe7XBfxLEPYlS61CgFV+H3UPwMCRCbTvXgOI5hYikqEPZ9IMXYAL0mpRY//kR0nYz/aQIaAlq5rEAo7YNAiV/b1mXFZYVrSo2+0Pt8NFIDUnQ2GUXXVQWug9g8VFRqzDZz0Yr/XVJbx1pOqzamtrYYXWyrUGeTcQ1G6zNKq6u8loJJLfYDYH1GxzZ6iZ5ttbZjcjG6sy0sWvskKap0Umt9xvUZ90EA0XaB1NZnzLi0Ykb5n5yTWotFK4CQqJEVQozQCJFIQZKCpDEgAkIIUqpu6RKIA1VHQiIyClE0EQVSkpJCYWc/Ax4OUnELE645D0ftpBHDjDDnEOEVgpTmRVYLA4waYzeBHqrwEJHbQjjbgMSqZvLOdeewGH6sZa6uQGwBdN3u4vU/jtB1elalOhL3Qc5fXXpFREUzIrgI6FI/AKOnhy85nz+9CrpQOQNoBABTFbAwhlxDVlwkOHYD5EKR9gcAVp9fVIdZH/qHCSTjNsIp3lfCgZpl5crCtWQvB+3IDz+rFtPO2PLuRnhKtRBaV07Hpgk778lmYAIDX2OHKGIqWJcR/AAXQPiMA8f2OzAiktOFzijNP33GDQO3JnWiBv06EaiMMiw/Mzk8rPTYg6mCF0hEIFxxnqVZaCBlh29bBvjdxvcGVqhK6+gsOmkPPRUhjAKkR73fbwrtlDYR2OJwki46dZ4MIdHhB9gQiNo8EKsF6QPfOuchSTgPoWGIGGMt4QzNc3EsVS8M/vilqAE=</div>
-    <div id="copyMsg"></div>
+  <div id="waitBox">
+    <p id="waitMsg"></p>
   </div>
+
+  <!-- shown if they type the phrase in the first 3 minutes -->
+  <div id="copyBoxEarly">
+    <div class="copyText" id="copyTextEarly">KLUv/WCZL50eABYylifwzroBDlVAEG/QLRrdyWHr5wrLsFlCTLsCxolMdA1BU6QjsolsQkOPAIsAigB/dWca/4NQovibEi/x4ve8j0byHK1tB4//IrHIT/H/00wPKJJMjwmSIkk0wUb0okgSQSAUcUAeEAmapAZkQPEPtMR0zfg9BhQ/B4Kb/B6mOHq8+HHAciw2DFvRZWynwBRn0ndS6vwkijNt4cdzSot2YOHHHIUuYTkPXCdiGxK4DlPcl4jx41R0KCi+rsgegwYUvwSn8j/Nh99lHFDobDoEBweucqsnk+Z/M26axECSBELHQ5og0wRFKP6umxO0878Hf0ehRN/Ivsi+SIHUekq3WoDWLNvaEge2K8Uokv9FFH93rfrifw6Kf7HNNf63WLGyWBSzbI09LYiOm+gcIjA6y/harOge+R9nwmGzQPH3rKLForPifxGEKA4dzkWX8WeUTv4HYVKKIkcEJ0kEowZ80De6fcXJFSf8j87GwH3QqnQyJ70osW5v1fkf1Jiqex6EDSgdAqD4XVbWtTgrFhZrtRdaJ9sY6XF2hdFp1eb0SrOe7XBfxLEPYlS61CgFV+H3UPwMCRCbTvXgOI5hYikqEPZ9IMXYAL0mpRY//kR0nYz/aQIaAlq5rEAo7YNAiV/b1mXFZYVrSo2+0Pt8NFIDUnQ2GUXXVQWug9g8VFRqzDZz0Yr/XVJbx1pOqzamtrYYXWyrUGeTcQ1G6zNKq6u8loJJLfYDYH1GxzZ6iZ5ttbZjcjG6sy0sWvskKap0Umt9xvUZ90EA0XaB1NZnzLi0Ykb5n5yTWotFK4CQqJEVQozQCJFIQZKCpDEgAkIIUqpu6RKIA1VHQiIyClE0EQVSkpJCYWc/Ax4OUnELE645D0ftpBHDjDDnEOEVgpTmRVYLA4waYzeBHqrwEJHbQjjbgMSqZvLOdeewGH6sZa6uQGwBdN3u4vU/jtB1elalOhL3Qc5fXXpFREUzIrgI6FI/AKOnhy85nz+9CrpQOQNoBABTFbAwhlxDVlwkOHYD5EKR9gcAVp9fVIdZH/qHCSTjNsIp3lfCgZpl5crCtWQvB+3IDz+rFtPO2PLuRnhKtRBaV07Hpgk778lmYAIDX2OHKGIqWJcR/AAXQPiMA8f2OzAiktOFzijNP33GDQO3JnWiBv06EaiMMiw/Mzk8rPTYg6mCF0hEIFxxnqVZaCBlh29bBvjdxvcGVqhK6+gsOmkPPRUhjAKkR73fbwrtlDYR2OJwki46dZ4MIdHhB9gQiNo8EKsF6QPfOuchSTgPoWGIGGMt4QzNc3EsVS8M/vilqAE=</div>
+    <div class="copyMsg" id="copyMsgEarly"></div>
+  </div>
+
+  <!-- shown after they've waited out the 3.5 hour taunt window -->
+  <div id="copyBoxLate">
+    <div class="copyText" id="copyTextLate">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</div>
+    <div class="copyMsg" id="copyMsgLate"></div>
+  </div>
+
+  <div id="timer"></div>
 
   <script>
     const image1 = "https://cdn.phototourl.com/free/2026-09-13-0ac345ed-85ce-4cb1-903e-499357e87dc2.webp";
@@ -98,13 +126,25 @@
     const image3 = "https://cdn.phototourl.com/free/2026-09-14-3faaeae2-0dbe-403a-80be-fe04bd833a16.jpg";
     const image4 = "https://cdn.phototourl.com/free/2026-09-14-c2988045-1623-4003-9b3f-0d163d611684.jpg";
 
-    let interval;
+    const PAGE_START = Date.now();
+    const THREE_MIN = 3 * 60 * 1000;
+    const THREE_HALF_HR = 3.5 * 60 * 60 * 1000;
+
+    let slideInterval;
 
     function hideAll() {
       document.getElementById("entry").style.display = "none";
       document.getElementById("display").style.display = "none";
-      document.getElementById("copyBox").style.display = "none";
-      if (interval) clearInterval(interval);
+      document.getElementById("copyBoxEarly").style.display = "none";
+      document.getElementById("copyBoxLate").style.display = "none";
+      document.getElementById("waitBox").style.display = "none";
+      if (slideInterval) clearInterval(slideInterval);
+    }
+
+    function showEntry() {
+      hideAll();
+      document.getElementById("entry").style.display = "flex";
+      document.getElementById("codeInput").value = "";
     }
 
     function showSlideshow(images) {
@@ -114,16 +154,32 @@
       let i = 0;
       img.src = images[i];
       if (images.length > 1) {
-        interval = setInterval(() => {
+        slideInterval = setInterval(() => {
           i = (i + 1) % images.length;
           img.src = images[i];
         }, 1000);
       }
     }
 
-    function showCopyBox() {
+    function showWaitMessage() {
       hideAll();
-      document.getElementById("copyBox").style.display = "flex";
+      document.getElementById("waitMsg").textContent =
+        "dang it bro try next time maybe wait 3.5 hours wish you the best's of luck❤️";
+      document.getElementById("waitBox").style.display = "flex";
+    }
+
+    function showCopyBoxEarly() {
+      hideAll();
+      document.getElementById("copyBoxEarly").style.display = "flex";
+    }
+
+    function showCopyBoxLate() {
+      hideAll();
+      document.getElementById("copyBoxLate").style.display = "flex";
+      // 2 seconds of copy time, then kicked back to start
+      setTimeout(() => {
+        showEntry();
+      }, 2000);
     }
 
     document.getElementById("go").addEventListener("click", handleSubmit);
@@ -131,11 +187,17 @@
       if (e.key === "Enter") handleSubmit();
     });
 
-    document.getElementById("copyText").addEventListener("click", () => {
-      const text = document.getElementById("copyText").innerText;
+    document.getElementById("copyTextEarly").addEventListener("click", () => {
+      const text = document.getElementById("copyTextEarly").innerText;
       navigator.clipboard.writeText(text).then(() => {
-        document.getElementById("copyMsg").textContent = "Copied!";
-        setTimeout(() => { document.getElementById("copyMsg").textContent = ""; }, 1500);
+        document.getElementById("copyMsgEarly").textContent = "Copied!";
+      });
+    });
+
+    document.getElementById("copyTextLate").addEventListener("click", () => {
+      const text = document.getElementById("copyTextLate").innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        document.getElementById("copyMsgLate").textContent = "Copied!";
       });
     });
 
@@ -145,7 +207,14 @@
       if (!val) return;
 
       if (val === "Rick-Primeee-Ducky-is-dad") {
-        showCopyBox();
+        const elapsed = Date.now() - PAGE_START;
+        if (elapsed < THREE_MIN) {
+          showCopyBoxEarly();
+        } else if (elapsed < THREE_MIN + THREE_HALF_HR) {
+          showWaitMessage();
+        } else {
+          showCopyBoxLate();
+        }
       } else if (lower === "daddy") {
         showSlideshow([image4]);
       } else if (lower.includes("prime") || lower.includes("rick")) {
@@ -154,6 +223,18 @@
         showSlideshow([image2, image3]);
       }
     }
+
+    // bottom-left running timer showing time since page loaded
+    function updateTimer() {
+      const elapsed = Date.now() - PAGE_START;
+      const totalSec = Math.floor(elapsed / 1000);
+      const h = String(Math.floor(totalSec / 3600)).padStart(2, "0");
+      const m = String(Math.floor((totalSec % 3600) / 60)).padStart(2, "0");
+      const s = String(totalSec % 60).padStart(2, "0");
+      document.getElementById("timer").textContent = `${h}:${m}:${s}`;
+    }
+    setInterval(updateTimer, 1000);
+    updateTimer();
   </script>
 </body>
 </html>
