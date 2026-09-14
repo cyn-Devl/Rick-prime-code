@@ -8,17 +8,46 @@
     margin: 0;
     height: 100%;
     background: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    overflow: hidden;
   }
   img {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  #player {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 200px;
+    height: 113px;
+    border: none;
   }
 </style>
 </head>
 <body>
-  <img src="https://cdn.phototourl.com/free/2026-09-13-0ac345ed-85ce-4cb1-903e-499357e87dc2.webp" alt="chat screenshot">
+  <img id="slideshow" src="" alt="slideshow">
+
+  <iframe id="player"
+    src="https://www.youtube.com/embed/48rz8udZBmQ?autoplay=1&loop=1&playlist=48rz8udZBmQ"
+    allow="autoplay; encrypted-media"
+    allowfullscreen>
+  </iframe>
+
+  <script>
+    const images = [
+      "https://cdn.phototourl.com/free/2026-09-13-0ac345ed-85ce-4cb1-903e-499357e87dc2.webp",
+      "https://cdn.phototourl.com/free/2026-09-14-baa52b79-5c0a-4bcd-90c0-b47dd0c62da2.jpg",
+      "https://cdn.phototourl.com/free/2026-09-14-3faaeae2-0dbe-403a-80be-fe04bd833a16.jpg"
+    ];
+    let i = 0;
+    const img = document.getElementById("slideshow");
+    img.src = images[i];
+    setInterval(() => {
+      i = (i + 1) % images.length;
+      img.src = images[i];
+    }, 1000);
+  </script>
 </body>
 </html>
